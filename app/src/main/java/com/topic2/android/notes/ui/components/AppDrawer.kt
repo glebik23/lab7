@@ -21,7 +21,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.topic2.android.notes.theme.NotesTheme
 import androidx.compose.material.Surface
+import androidx.compose.material.Switch
 import androidx.compose.material.icons.filled.Home
+import com.topic2.android.notes.theme.NotesThemeSettings
 
 @Composable
 private fun AppDrawerHeader() {
@@ -117,5 +119,38 @@ fun ScreenNavigationButtonPreview() {
             isSelected = true,
             onClick = { }
         )
+    }
+}
+
+@Composable
+private fun LightDarkThemeItem() {
+    Row(
+        Modifier
+            .padding(8.dp)
+    ) {
+        Text(
+            text = "Включить тёмную тему",
+            style = MaterialTheme.typography.body2,
+            color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 8.dp, top = 8.dp, end = 8.dp)
+                .align(alignment = Alignment.CenterVertically)
+        )
+        Switch(
+            checked = NotesThemeSettings.isDarkThemeEnabled,
+            onCheckedChange = { NotesThemeSettings.isDarkThemeEnabled = it },
+            modifier = Modifier
+                .padding(start = 8.dp, end = 8.dp)
+                .align(alignment = Alignment.CenterVertically)
+        )
+    }
+}
+
+@Preview
+@Composable
+fun LightDarkThemeItemPreview() {
+    NotesTheme {
+        LightDarkThemeItem()
     }
 }
