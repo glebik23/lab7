@@ -40,13 +40,19 @@ fun Note() {
             size = 40.dp,
             border = 1.dp
         )
-        Column(modifier = Modifier.weight(1f)) {
+        Column(modifier = Modifier.weight(1f)
+            .weight(1f)
+            .align(Alignment.CenterVertically)
+        ) {
             Text(text = "Заголовок", maxLines = 1)
             Text(text = "Содержимое", maxLines = 1)
         }
         Checkbox(
-            checked = false, onCheckedChange = { },
-            modifier = Modifier.padding(start = 8.dp)
+            checked = false,
+            onCheckedChange = { },
+            modifier = Modifier
+                .padding(start = 8.dp)
+                .align(Alignment.CenterVertically)
         )
     }
 }
