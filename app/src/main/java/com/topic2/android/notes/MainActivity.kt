@@ -33,25 +33,7 @@ class MainActivity : AppCompatActivity() {
 
     setContent {
       NotesTheme {
-        val coroutineScope = rememberCoroutineScope()
-        val scaffoldState: ScaffoldState = rememberScaffoldState()
-
-        Scaffold(
-          scaffoldState = scaffoldState,
-          drawerContent = {
-            AppDrawer(
-              currentScreen = Screen.Notes,
-              closeDrawerAction = {
-                coroutineScope.launch {
-                  scaffoldState.drawerState.close()
-                }
-              }
-            )
-          },
-          content = {
-            Note()
-          }
-        )
+        NoteScreen(viewModel = viewModel)
       }
     }
   }
