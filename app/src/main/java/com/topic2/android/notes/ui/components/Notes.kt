@@ -27,6 +27,7 @@ import com.topic2.android.notes.domain.model.NoteModel
 import com.topic2.android.notes.theme.rwGreen
 import com.topic2.android.notes.util.fromHex
 
+
 @Composable
 fun Note(
     note: NoteModel,
