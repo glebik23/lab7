@@ -2,6 +2,7 @@ package com.topic2.android.notes.ui.components.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.List
 import androidx.compose.runtime.Composable
@@ -22,18 +23,23 @@ fun NoteScreen(
         .notesNotInTrash
         .observeAsState(listOf())
 
-    Column {
-        TopAppBar(
-            title = "Заметки",
-            icon = Icons.Filled.List,
-            onIconClick = {}
-        )
-        NotesList(
-            notes = notes,
-            onNoteCheckedChange = { viewModel.onNoteCheckedChange(it) },
-            onNoteClick = { viewModel.onNoteClick(it) }
-        )
-    }
+    Scaffold(topBar = {
+            TopAppBar(
+                title = "Notes",
+                icon = Icons.Filled.List, onIconClick = {}
+            )
+        },
+                content = { it ->
+            if (notes.isNotEmpty()) {
+                NotesList(
+                    notes = notes, onNoteCheckedChange = {
+                        viewModel.onNoteCheckedChange(it)
+                    },
+                    onNoteClick = { viewModel.onNoteClick(it) }
+                )
+            }
+        }
+    )
 }
 
 @Composable
