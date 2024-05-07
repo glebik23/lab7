@@ -23,11 +23,19 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.rememberBottomDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,24 +46,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.topic2.android.notes.R
 import com.topic2.android.notes.domain.model.ColorModel
-import com.topic2.android.notes.util.fromHex
-import com.topic2.android.notes.viewmodel.MainViewModel
-import androidx.compose.material.TopAppBar
-import androidx.compose.material.rememberBottomDrawerState
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import com.topic2.android.notes.domain.model.NEW_NOTE_ID
 import com.topic2.android.notes.domain.model.NoteModel
 import com.topic2.android.notes.routing.NotesRouter
 import com.topic2.android.notes.routing.Screen
+import com.topic2.android.notes.ui.components.NoteColor
+import com.topic2.android.notes.util.fromHex
+import com.topic2.android.notes.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
 
-@ExperimentalMaterialApi
 @Composable
+@ExperimentalMaterialApi
 fun SaveNoteScreen(viewModel: MainViewModel) {
     val noteEntry: NoteModel by viewModel.noteEntry.observeAsState(NoteModel())
 
@@ -68,7 +69,6 @@ fun SaveNoteScreen(viewModel: MainViewModel) {
     val moveNoteToTrashDialogShownState: MutableState<Boolean> = rememberSaveable {
         mutableStateOf(false)
     }
-
     BackHandler (
         onBack = {
             if (bottomDrawerState.isOpen) {
@@ -78,7 +78,6 @@ fun SaveNoteScreen(viewModel: MainViewModel) {
             }
         }
     )
-
     Scaffold(topBar = {
         val isEditingMode: Boolean = noteEntry.id != NEW_NOTE_ID
         SaveNoteTopAppBar(
@@ -91,7 +90,8 @@ fun SaveNoteScreen(viewModel: MainViewModel) {
             },
             onOpenColorPickerClick = {
                 coroutineScope.launch { bottomDrawerState.open() }
-            }, onDeleteNoteClick = {
+            },
+            onDeleteNoteClick = {
                 moveNoteToTrashDialogShownState.value = true
             }
         )
@@ -116,39 +116,38 @@ fun SaveNoteScreen(viewModel: MainViewModel) {
                     )
                 }
             )
-            if (moveNoteToTrashDialogShownState.value) {
-                AlertDialog(
-                    onDismissRequest = {
-                        moveNoteToTrashDialogShownState.value = false
-                    },
-                    title = {
-                        Text("Move note to the trash?")
-                    },
-                    text = {
-                        Text(
-                            "Are you sure you want to" + "move this note to the trash?"
-                        )
-                    },
-                    confirmButton = {
-                        TextButton(onClick = {
-                            viewModel.moveNoteToTrash(noteEntry)
-                        }) {
-                            Text("Confirm")
-                        }
-                    },
-                    dismissButton = {
-                        TextButton(onClick = {
-                            moveNoteToTrashDialogShownState.value = false
-                        }) {
-                            Text("Dismiss")
-                        }
-                    }
-                )
-            }
         }
     )
+    if (moveNoteToTrashDialogShownState.value) {
+        AlertDialog(
+            onDismissRequest = {
+                moveNoteToTrashDialogShownState.value = false
+            },
+            title = {
+                Text("Move note to the trash?")
+            },
+            text = {
+                Text(
+                    "Are you sure you want to" + "move this note to the trash?"
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    viewModel.moveNoteToTrash(noteEntry)
+                }) {
+                    Text("Confirm")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    moveNoteToTrashDialogShownState.value = false
+                }) {
+                    Text("Dismiss")
+                }
+            }
+        )
+    }
 }
-
 
 
 @Composable
@@ -207,7 +206,6 @@ private fun SaveNoteTopAppBar(
         }
     )
 }
-
 @Composable
 private fun SaveNoteContent(
     note: NoteModel,
@@ -242,8 +240,8 @@ private fun SaveNoteContent(
         )
         PickedColor(color = note.color)
     }
-}
 
+}
 @Composable
 private fun ContentTextField(
     modifier: Modifier = Modifier,
@@ -263,7 +261,6 @@ private fun ContentTextField(
         )
     )
 }
-
 @Composable
 private fun NoteCheckOption(
     isChecked: Boolean,
@@ -335,7 +332,7 @@ private fun ColorPicker(
     }
 }
 @Composable
-private fun ColorItem(
+fun ColorItem(
     color: ColorModel,
     onColorSelect: (ColorModel) -> Unit
 ) {
@@ -350,7 +347,8 @@ private fun ColorItem(
     ) {
         NoteColor(
             modifier = Modifier
-                .padding(10.dp), color = Color.fromHex(color.hex), size = 80.dp, border = 2.dp
+                .padding(10.dp), color = Color.fromHex(color.hex), size = 80.dp,
+            border = 2.dp
         )
         Text(
             text = color.name,
@@ -391,7 +389,6 @@ fun SaveNoteTopAppBarPreview() {
         onDeleteNoteClick = {}
     )
 }
-
 @Preview
 @Composable
 fun SaveNoteContentPreview() {
@@ -400,7 +397,6 @@ fun SaveNoteContentPreview() {
         onNoteChange = {}
     )
 }
-
 @Preview
 @Composable
 fun ContentTextFieldPreview() {
@@ -410,7 +406,6 @@ fun ContentTextFieldPreview() {
         onTextChange = {}
     )
 }
-
 @Preview
 @Composable
 fun NoteCheckOptionPreview() {

@@ -29,7 +29,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun NotesScreen(viewModel: MainViewModel) {
+fun NoteScreen(viewModel: MainViewModel) {
 
     val notes: List<NoteModel> by viewModel
         .notesNotInTrash
