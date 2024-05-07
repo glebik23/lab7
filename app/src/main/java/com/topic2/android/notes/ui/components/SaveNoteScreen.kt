@@ -50,11 +50,21 @@ fun SaveNoteScreen(viewModel: MainViewModel) {
         SaveNoteTopAppBar(
             isEditingMode = isEditingMode, onBackClick = { NotesRouter.navigateTo(Screen.Notes)
              },
-            onSaveNoteClick = { }, onOpenColorPickerClick = { }, onDeleteNoteClick = { }
+            onSaveNoteClick = {
+                viewModel.saveNote(noteEntry)
+            }, onOpenColorPickerClick = { }, onDeleteNoteClick = {
+                viewModel.moveNoteToTrash(noteEntry)
+            }
         )
     },
-        content = {}
+        content = {
+            SaveNoteContent(
+                note = noteEntry,
+                onNoteChange = { updateNoteEntry ->
+                    viewModel.onNoteEntryChange(updateNoteEntry)
+        }
     )
+}
 }
 
 @Composable
